@@ -48,22 +48,21 @@ const App: React.FC = () => {
   
   const currentBlueprintTaxa = useRef<string | null>(null);
 
-  const updateBlueprint = async (taxa: string) => {
-    if (currentBlueprintTaxa.current === taxa && imgLoading) return;
+  const updateBlueprint = async (taxa: string, force = false) => {
+    if (currentBlueprintTaxa.current === taxa && imgLoading && !force) return;
     
     currentBlueprintTaxa.current = taxa;
     setImgLoading(true);
     setImgError(false);
     
     try {
-      const img = await generateTaxaBlueprint(taxa);
+      const img = await generateTaxaBlueprint(taxa, force);
       if (currentBlueprintTaxa.current === taxa) {
         setBlueprintImage(img);
       }
-    } catch (err) {
-      console.error("Blueprint generation failed", err);
+    } catch {
       if (currentBlueprintTaxa.current === taxa) {
-        setImgError(true);
+        setBlueprintImage(null);
       }
     } finally {
       if (currentBlueprintTaxa.current === taxa) {
@@ -278,7 +277,7 @@ const App: React.FC = () => {
                 imgError={imgError}
                 onRetry={() => {
                   currentBlueprintTaxa.current = null;
-                  updateBlueprint(activeQuery);
+                  updateBlueprint(activeQuery, true);
                 }}
                 metadata={selectedSite.metadata}
                 stats={selectedSite.stats}

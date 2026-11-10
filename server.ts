@@ -191,11 +191,26 @@ async function startServer() {
     return res.json({ data: null });
   });
 
+  let isImageQuotaExhausted = false;
+
   app.post("/api/taxa-blueprint", async (req, res): Promise<any> => {
     try {
-      const { taxaName } = req.body || {};
+      const { taxaName, forceRetry } = req.body || {};
       if (!taxaName || typeof taxaName !== "string") {
         return res.status(400).json({ error: "Missing taxaName parameter." });
+      }
+
+      if (forceRetry) {
+        isImageQuotaExhausted = false;
+      }
+
+      // If daily quota is exhausted on the free tier, immediately serve field sketch without triggering 429s
+      if (isImageQuotaExhausted) {
+        return res.json({
+          url: null,
+          quotaExceeded: true,
+          status: "field_sketch",
+        });
       }
 
       const apiKey = process.env.GEMINI_API_KEY || process.env.API_KEY;
@@ -203,7 +218,7 @@ async function startServer() {
         return res.json({
           url: null,
           quotaExceeded: false,
-          message: "API key is not configured.",
+          status: "field_sketch",
         });
       }
 
@@ -237,10 +252,10 @@ async function startServer() {
           if (part.inlineData) {
             const mimeType = part.inlineData.mimeType || "image/png";
             const base64Data = `data:${mimeType};base64,${part.inlineData.data}`;
-            return res.json({ url: base64Data, quotaExceeded: false });
+            return res.json({ url: base64Data, quotaExceeded: false, status: "ai_reconstruction" });
           }
         }
-        return res.json({ url: null, quotaExceeded: false });
+        return res.json({ url: null, quotaExceeded: false, status: "field_sketch" });
       } catch (err: any) {
         const errMsg = err?.message || String(err);
         const isQuota =
@@ -249,22 +264,24 @@ async function startServer() {
           errMsg.includes("quota") ||
           errMsg.includes("limit: 0");
 
-        console.warn(`[Backend] Image generation failed for ${taxaName} (Quota exceeded: ${isQuota}):`, errMsg);
+        if (isQuota) {
+          isImageQuotaExhausted = true;
+          console.log(`[Backend] Image generation quota reached on free tier. Using scientific field sketch for ${taxaName}.`);
+        } else {
+          console.log(`[Backend] Image generation unavailable for ${taxaName}. Using scientific field sketch.`);
+        }
 
         return res.json({
           url: null,
           quotaExceeded: isQuota,
-          error: isQuota
-            ? "Free-tier daily quota limit reached for image generation. Technical field sketch active."
-            : "Reconstruction unavailable. Technical field sketch active.",
+          status: "field_sketch",
         });
       }
-    } catch (error: any) {
-      console.error("[Backend] Error generating taxa blueprint:", error);
+    } catch {
       return res.json({
         url: null,
         quotaExceeded: true,
-        error: error.message || "Failed to generate taxa blueprint.",
+        status: "field_sketch",
       });
     }
   });

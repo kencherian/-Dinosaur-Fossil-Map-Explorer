@@ -150,19 +150,30 @@ export const fetchPaleoData = async (siteName: string, speciesName: string): Pro
   };
 };
 
+let clientImageQuotaExhausted = false;
+
 /**
  * GEMINI API (Server-side proxy): Generates a technical scientific illustration or photoreal reconstruction.
  */
-export const generateTaxaBlueprint = async (taxaName: string): Promise<string | null> => {
+export const generateTaxaBlueprint = async (taxaName: string, forceRetry = false): Promise<string | null> => {
   if (blueprintCache[taxaName]) {
     return blueprintCache[taxaName];
+  }
+
+  if (forceRetry) {
+    clientImageQuotaExhausted = false;
+  }
+
+  // If quota is exhausted on the free tier, seamlessly serve field sketch without triggering API calls
+  if (clientImageQuotaExhausted) {
+    return null;
   }
 
   try {
     const response = await fetch("/api/taxa-blueprint", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ taxaName }),
+      body: JSON.stringify({ taxaName, forceRetry }),
     });
 
     if (!response.ok) {
@@ -176,12 +187,11 @@ export const generateTaxaBlueprint = async (taxaName: string): Promise<string | 
     }
 
     if (result?.quotaExceeded) {
-      console.info(`[Client] Image quota limit reached for ${taxaName}; displaying technical specimen blueprint.`);
+      clientImageQuotaExhausted = true;
     }
 
     return null;
-  } catch (err) {
-    console.warn(`[Client] Notice for ${taxaName} reconstruction:`, err);
+  } catch {
     return null;
   }
 };
