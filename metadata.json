@@ -1,0 +1,8 @@
+{
+  "name": "Remix Dinosaur Fossil Map Explorer",
+  "description": "A technical field survey visualization of global dinosaur fossil sites powered by Nano Banana and Gemini Flash.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
