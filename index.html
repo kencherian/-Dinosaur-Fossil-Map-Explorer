@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Remix Dinosaur Fossil Map Explorer</title>
+    <meta name="description" content="A technical field survey visualization of global dinosaur fossil sites powered by Nano Banana and Gemini Flash." />
+    <meta property="og:title" content="Remix Dinosaur Fossil Map Explorer" />
+    <meta property="og:description" content="A technical field survey visualization of global dinosaur fossil sites powered by Nano Banana and Gemini Flash." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&family=Quicksand:wght@500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'park-water': '#4ea6a9',
+              'park-water-light': '#66bfc1',
+              'park-water-dark': '#3a878a',
+              'park-water-bg': '#54b0b2',
+              'park-land': '#b5d774',
+              'park-land-dark': '#97be56',
+              'park-land-light': '#c8e48b',
+              'park-sand': '#f6f3e5',
+              'park-tree': '#2b585c',
+              'park-trunk': '#735238',
+              'park-card': '#fcfbf7',
+              'park-card-muted': '#f4f1e6',
+              'park-card-border': '#e5e1d3',
+              'park-ink': '#1f3835',
+              'park-ink-muted': '#567a72',
+              'park-ink-light': '#8daaa3',
+              'park-border-green': '#87bd52',
+              'park-accent-yellow': '#f5a623',
+              'park-accent-orange': '#e67e22',
+              'park-accent-coral': '#f43f5e',
+              'park-accent-blue': '#0284c7',
+              'park-accent-green': '#10b981',
+              'park-bus': '#e74c3c',
+            },
+            fontFamily: {
+              hand: ['"Gaegu"', 'cursive', 'sans-serif'],
+              rounded: ['"M PLUS Rounded 1c"', '"Nunito"', 'sans-serif'],
+              sans: ['"Nunito"', '"Quicksand"', '"M PLUS Rounded 1c"', 'sans-serif'],
+              mono: ['"Roboto Mono"', 'monospace'],
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        font-family: 'Nunito', 'M PLUS Rounded 1c', sans-serif;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://esm.sh/@google/genai@^1.38.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
+    "d3": "https://esm.sh/d3@7.9.0",
+    "topojson-client": "https://esm.sh/topojson-client@3.1.0"
+  }
+}
+</script>
+</head>
+  <body class="bg-park-card text-park-ink selection:bg-park-accent-yellow/30 selection:text-park-ink">
+    <div id="root" class="h-full w-full"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
