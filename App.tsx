@@ -5,6 +5,7 @@ import { DINOSAUR_DB } from './data/dinosaurData';
 import MapCanvas from './components/MapCanvas';
 import { TechIcon, DinoIcon } from './components/Icons';
 import { DinosaurBlueprint } from './components/DinosaurBlueprint';
+import ClimateRadarChart from './components/ClimateRadarChart';
 import { 
   Loader2, 
   Map as MapIcon, 
@@ -426,6 +427,9 @@ const App: React.FC = () => {
                 {/* METRICS TAB */}
                 {activeTab === 'metrics' && (
                   <div className="animate-in space-y-4">
+                    {/* Paleoclimate D3 Visual Radar Chart */}
+                    <ClimateRadarChart selectedSite={selectedSite} />
+
                     <div className="bg-white p-4 rounded-2xl border border-park-card-border shadow-xs space-y-3">
                       <h3 className="text-[13px] font-rounded font-bold text-park-tree border-b border-park-card-border pb-2 flex items-center justify-between">
                         <span>Vital Statistics • Specimen Metrics</span>
