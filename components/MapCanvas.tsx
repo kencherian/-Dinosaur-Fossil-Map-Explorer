@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import * as topojson from 'topojson-client';
 import { SiteMarker } from '../types';
 import { Plus, Minus, Compass, Navigation, Trees, MapPin, Footprints, Wind, Anchor, Layers } from 'lucide-react';
+import { MapLegend } from './MapLegend';
 
 // Dino footprint path data
 const DINO_FOOTPRINT_PATH = "M511.517,370.284c-5.971-20.294-92.954-22.906-113.159-18.866c-20.216,4.041-76.79,2.68-88.913-9.443c-12.124-12.124,4.041-32.329,16.175-44.451c12.124-12.124,38.389-50.524,46.472-58.606c8.082-8.082,50.166-50.378,65.325-74.758c30.988-49.843,41.437-98.68,25.262-114.845c-16.164-16.164-65.003-5.727-114.834,25.262c-24.38,15.17-66.688,57.244-74.769,65.325c-8.083,8.083-46.472,34.36-58.606,46.483c-12.122,12.124-32.328,28.287-44.451,16.164c-12.122-12.124-13.474-68.698-9.433-88.902c4.041-20.205,1.419-107.187-18.866-113.16C121.438-5.483,83.798,44.94,68.984,87.37c-8.685,24.871-82.852,141.446-66.688,226.319c16.175,84.872,31,127.982,49.507,146.503c18.519,18.519,61.642,33.343,146.503,49.507c84.872,16.164,201.448-57.991,226.319-66.676C467.056,428.198,517.478,390.557,511.517,370.284z";
@@ -904,6 +905,13 @@ const MapCanvas: React.FC<MapCanvasProps> = ({
           </div>
         )}
       </div>
+
+      {/* Persistent Map Legend: Geological Ages, Fossil Sites & Site Status Key */}
+      <MapLegend 
+        className="absolute top-[68px] left-5"
+        activeTaxaName={activeTaxaName}
+        activeSiteCount={markers.length}
+      />
 
       {/* Bottom-Right: Illustrated Course Timetable / Expedition Trail Legend (Bottom-aligned with Zoom controls) */}
       {markers.length > 0 && (
